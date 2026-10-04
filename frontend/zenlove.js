@@ -49,7 +49,7 @@ let invitationOpened = false;
 const invitationCover = document.createElement('dialog');
 invitationCover.className = 'invitation-cover';
 invitationCover.setAttribute('aria-label', 'Mở thiệp cưới');
-invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><span class="cover-seal">M <i>&</i> A</span></div><h1><span class="cover-bride">Phương Mai</span><em>&</em><span class="cover-groom">Tuấn Anh</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button><p class="cover-note">Chạm để mở thiệp và nghe nhạc</p></div>';
+invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><span class="cover-seal">M <i>&</i> A</span></div><h1><span class="cover-bride">Phương Mai</span><em>&</em><span class="cover-groom">Tuấn Anh</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button></div>';
 document.body.append(invitationCover);
 const previousOverflow = document.documentElement.style.overflow;
 document.documentElement.style.overflow = 'hidden';
