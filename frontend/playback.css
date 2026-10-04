@@ -46,3 +46,7 @@ form[aria-busy=true] button[type=submit]{opacity:.65;cursor:wait}
 @media(prefers-reduced-motion:reduce){.cover-flap,.cover-letter,.cover-seal{transition:none}}
 .wedding-gift-panel{position:absolute;left:0;width:100%;display:flex;justify-content:center;z-index:64}.wedding-gift-panel .bride-qr-button{font-size:15px;padding:12px 22px}
 .wedding-gift-panel,.wedding-gift-panel .bride-qr-button{pointer-events:auto}
+
+/* Highlight the essential wedding details in the invitation accent color. */
+[data-config="venueName"],[data-config="time"],[data-config="dateWithWeekday"]{color:#a50010}
+[data-config="venue"],[data-config="lunarDate"]{color:#000}
