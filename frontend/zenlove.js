@@ -45,6 +45,31 @@ const musicButton = document.getElementById('music-button');
 musicButton.innerHTML = '<span class="record" aria-hidden="true"><span>♫</span></span>';
 music.preload = 'auto';
 let musicWanted = true;
+let invitationOpened = false;
+const invitationCover = document.createElement('dialog');
+invitationCover.className = 'invitation-cover';
+invitationCover.setAttribute('aria-label', 'Mở thiệp cưới');
+invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><span class="cover-seal">M <i>&</i> A</span></div><h1><span class="cover-bride">Phương Mai</span><em>&</em><span class="cover-groom">Tuấn Anh</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button><p class="cover-note">Chạm để mở thiệp và nghe nhạc</p></div>';
+document.body.append(invitationCover);
+const previousOverflow = document.documentElement.style.overflow;
+document.documentElement.style.overflow = 'hidden';
+invitationCover.showModal();
+invitationCover.addEventListener('cancel', event => event.preventDefault());
+invitationCover.querySelector('.cover-open').onclick = () => {
+  if (invitationOpened) return;
+  invitationOpened = true;
+  musicWanted = true;
+  startMusic();
+  invitationCover.classList.add('opening');
+  setTimeout(() => {
+    invitationCover.close();
+    document.documentElement.style.overflow = previousOverflow;
+    window.scrollTo({top:0,behavior:'instant'});
+    scrollPosition = 0;
+    resumeAt = performance.now() + 3000;
+    musicButton.focus({preventScroll:true});
+  }, reduced ? 0 : 650);
+};
 const musicPrompt = document.createElement('button');
 musicPrompt.className = 'music-prompt';
 musicPrompt.textContent = '♫ Chạm để mở thiệp cùng nhạc';
@@ -60,7 +85,7 @@ function syncMusic() {
   if (playing || !musicWanted) musicPrompt.hidden = true;
 }
 async function startMusic() {
-  if (!musicWanted || !music.paused) return;
+  if (!invitationOpened || !musicWanted || !music.paused) return;
   try { await music.play(); } catch (error) {
     if (error.name === 'NotAllowedError' && musicWanted) musicPrompt.hidden = false;
   }
@@ -132,6 +157,10 @@ requestAnimationFrame(scrollFrame);
 async function init() {
   const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config'); if(!response.ok) throw new Error('Không tải được cấu hình.');
   const config = await response.json();
+  invitationCover.querySelector('.cover-bride').textContent = config.bride?.name || 'Phương Mai';
+  invitationCover.querySelector('.cover-groom').textContent = config.groom?.name || 'Tuấn Anh';
+  const coverDate = parseWeddingDate(config.weddingDateTime);
+  if (Number.isFinite(coverDate)) invitationCover.querySelector('.cover-date').textContent = new Intl.DateTimeFormat('vi-VN',{timeZone:config.timeZone || 'Asia/Ho_Chi_Minh',day:'2-digit',month:'2-digit',year:'numeric'}).format(coverDate).replaceAll('/', ' · ');
   const imageVersion = Date.now();
   document.querySelectorAll('[data-photo]').forEach(el => {
     const file = config.photos?.[el.dataset.photo];
