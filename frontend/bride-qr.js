@@ -7,13 +7,13 @@
   if (!rsvp) return;
   const panel = document.createElement('div');
   panel.className = 'wedding-gift-panel';
-  panel.style.top = (parseFloat(rsvp.style.top) + parseFloat(rsvp.style.height) + 250) + 'px';
+  panel.style.top = (parseFloat(rsvp.style.top) + parseFloat(rsvp.style.height) + 205) + 'px';
   canvas.append(panel);
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'bride-qr-button';
   button.setAttribute('aria-label','Hộp mừng cưới online');
-  button.innerHTML = '<span class="gift-art" aria-hidden="true"><span class="gift-lid"></span><span class="gift-body"></span><span class="gift-heart">♥</span></span><span class="gift-label">Hộp mừng cưới online</span>'; 
+  button.innerHTML = '<span class="gift-art" aria-hidden="true"><span class="gift-lid"></span><span class="gift-body"></span><span class="gift-heart">♥</span></span><span class="gift-label"><span class="gift-title">Hộp mừng cưới</span><span class="gift-subtitle">ONLINE</span></span>'; 
   panel.append(button);
   const dialog = document.createElement('dialog');
   dialog.className = 'bride-qr-dialog';
