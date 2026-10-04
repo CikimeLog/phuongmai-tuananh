@@ -49,7 +49,7 @@ let invitationOpened = false;
 const invitationCover = document.createElement('dialog');
 invitationCover.className = 'invitation-cover';
 invitationCover.setAttribute('aria-label', 'Mở thiệp cưới');
-invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Mai & Anh</strong><small>25 · 10 · 2026</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">M <i>&</i> A</span></div><h1><span class="cover-bride">Phương Mai</span><em>&</em><span class="cover-groom">Tuấn Anh</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button></div>';
+invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Anh & Mai</strong><small>25 · 10 · 2026</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">A <i>&</i> M</span></div><h1><span class="cover-groom">Tuấn Anh</span><em>&</em><span class="cover-bride">Phương Mai</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button></div>';
 document.body.append(invitationCover);
 const previousOverflow = document.documentElement.style.overflow;
 document.documentElement.style.overflow = 'hidden';
@@ -203,7 +203,7 @@ async function init() {
     el.style.width = '260px';
     el.replaceChildren(weekday, day);
   });
-  document.title = `${values['bride.name']} & ${values['groom.name']} | Thiệp cưới`;
+  document.title = `${values['groom.name']} & ${values['bride.name']} | Thiệp cưới`;
   if(config.music && new URL(config.music, location.href).href !== music.src) music.src = config.music;
   startMusic();
   const directions = document.getElementById('directions');
