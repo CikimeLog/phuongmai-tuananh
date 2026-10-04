@@ -49,7 +49,7 @@ let invitationOpened = false;
 const invitationCover = document.createElement('dialog');
 invitationCover.className = 'invitation-cover';
 invitationCover.setAttribute('aria-label', 'Mở thiệp cưới');
-invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><span class="cover-seal">M <i>&</i> A</span></div><h1><span class="cover-bride">Phương Mai</span><em>&</em><span class="cover-groom">Tuấn Anh</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button></div>';
+invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Mai & Anh</strong><small>25 · 10 · 2026</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">M <i>&</i> A</span></div><h1><span class="cover-bride">Phương Mai</span><em>&</em><span class="cover-groom">Tuấn Anh</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button></div>';
 document.body.append(invitationCover);
 const previousOverflow = document.documentElement.style.overflow;
 document.documentElement.style.overflow = 'hidden';
@@ -60,7 +60,9 @@ invitationCover.querySelector('.cover-open').onclick = () => {
   invitationOpened = true;
   musicWanted = true;
   startMusic();
-  invitationCover.classList.add('opening');
+  invitationCover.querySelector('.cover-open').disabled = true;
+  invitationCover.classList.add('unsealing');
+  if (!reduced) setTimeout(() => invitationCover.classList.add('opening'), 1600);
   setTimeout(() => {
     invitationCover.close();
     document.documentElement.style.overflow = previousOverflow;
@@ -68,7 +70,7 @@ invitationCover.querySelector('.cover-open').onclick = () => {
     scrollPosition = 0;
     resumeAt = performance.now() + 3000;
     musicButton.focus({preventScroll:true});
-  }, reduced ? 0 : 650);
+  }, reduced ? 0 : 2250);
 };
 const musicPrompt = document.createElement('button');
 musicPrompt.className = 'music-prompt';

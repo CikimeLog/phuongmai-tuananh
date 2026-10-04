@@ -30,3 +30,17 @@ form[aria-busy=true] button[type=submit]{opacity:.65;cursor:wait}
 
 /* Keep Vietnamese accents in one system serif font on the opening cover. */
 .cover-card h1{font-family:"Times New Roman",Times,serif;letter-spacing:normal;font-kerning:normal}.cover-card h1 span{font-family:inherit;letter-spacing:normal}.cover-message{font-family:"Times New Roman",Times,serif}
+/* The flap opens first, then the invitation slides out of the envelope. */
+.cover-envelope{overflow:visible;perspective:900px;isolation:isolate}
+.cover-envelope::before,.cover-envelope::after{display:none}
+.cover-flap{position:absolute;inset:0;z-index:4;background:#fffaf3;clip-path:polygon(0 0,100% 0,50% 62%);transform-origin:top center;backface-visibility:hidden;transition:transform .75s cubic-bezier(.4,0,.2,1) .2s}
+.cover-pocket{position:absolute;inset:0;z-index:3;border-radius:4px;background:linear-gradient(32deg,#f0e4d6 49.5%,transparent 50%) left/50% 100% no-repeat,linear-gradient(-32deg,#f0e4d6 49.5%,transparent 50%) right/50% 100% no-repeat;pointer-events:none}
+.cover-pocket::after{content:'';position:absolute;inset:0;background:#f7ecdf;clip-path:polygon(0 100%,50% 38%,100% 100%);border-radius:4px}
+.cover-letter{position:absolute;left:8%;top:7%;width:84%;height:85%;z-index:2;box-sizing:border-box;padding:19px 10px;background:#fffdf8;border:1px solid #d7bda7;border-radius:3px;box-shadow:0 4px 14px #77331c18;color:#a50010;display:flex;flex-direction:column;justify-content:center;gap:9px;transition:transform .85s cubic-bezier(.2,.7,.2,1) .85s}
+.cover-letter span{font:italic 11px "Times New Roman",serif}.cover-letter strong{font:italic 24px "Times New Roman",serif;font-weight:normal}.cover-letter small{font:9px Arial,sans-serif;letter-spacing:2px}
+.cover-seal{z-index:5;transition:opacity .25s,transform .35s}
+.invitation-cover.unsealing .cover-seal{opacity:0;transform:translateX(-50%) scale(1.2)}
+.invitation-cover.unsealing .cover-flap{transform:rotateX(180deg)}
+.invitation-cover.unsealing .cover-letter{transform:translateY(-72%)}
+.invitation-cover.unsealing .cover-open{opacity:.5;cursor:default;transition:opacity .3s}
+@media(prefers-reduced-motion:reduce){.cover-flap,.cover-letter,.cover-seal{transition:none}}
