@@ -120,7 +120,7 @@ function scrollFrame(now) {
 syncScroll();
 requestAnimationFrame(scrollFrame);
 async function init() {
-  const response = await fetch('/api/config'); if(!response.ok) throw new Error('Không tải được cấu hình.');
+  const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config'); if(!response.ok) throw new Error('Không tải được cấu hình.');
   const config = await response.json();
   const imageVersion = Date.now();
   document.querySelectorAll('[data-photo]').forEach(el => {
@@ -211,6 +211,7 @@ if(form) {
   form.addEventListener('input', () => { feedback.hidden = true; });
   form.addEventListener('change', () => { feedback.hidden = true; });
   let sending = false;
+  let pendingRsvp = null;
   const name=form.querySelector('#rsvp-name'); name.required=true;
   const radios = form.querySelectorAll('input[type=radio]');
   radios.forEach(el=>{el.name='attendance';});
@@ -236,8 +237,19 @@ if(form) {
     showFeedback('Đang gửi xác nhận…','pending');
     try {
       const attendance=form.querySelector('input[type=radio]:checked')?.value||'yes';
-      const response=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(15000),body:JSON.stringify({name:name.value.trim(),attendance,count:attendance==='no'?0:Number(count?.value||1),message:''})});
-      const result=await response.json();if(!response.ok)throw new Error(result.error);
+      const data={name:name.value.trim(),attendance,count:attendance==='no'?0:Number(count?.value||1),message:''};
+      const onPages=location.hostname.endsWith('github.io');
+      let endpoint='/api/rsvp',payload=data;
+      if(onPages){
+        const config=await (await fetch('config.json')).json();endpoint=config.rsvpEndpoint;
+        if(!endpoint)throw new Error('Kết nối xác nhận chưa được cập nhật.');
+        const fingerprint=JSON.stringify(data);
+        if(!pendingRsvp||pendingRsvp.fingerprint!==fingerprint)pendingRsvp={fingerprint,id:crypto.randomUUID()};
+        payload={action:'public-rsvp',rsvp:{...data,id:pendingRsvp.id,createdAt:new Date().toISOString()}};
+      }
+      const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':onPages?'text/plain;charset=UTF-8':'application/json'},signal:AbortSignal.timeout(30000),body:JSON.stringify(payload)});
+      const result=await response.json();if(!response.ok||result.ok!==true)throw new Error(result.error||'Không gửi được xác nhận.');
+      pendingRsvp=null;
       document.getElementById('status').textContent='Đã gửi xác nhận. Cảm ơn bạn!';
       showFeedback('Đã gửi xác nhận. Cảm ơn bạn!','success');
     }catch(error){
