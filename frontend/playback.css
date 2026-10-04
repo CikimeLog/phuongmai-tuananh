@@ -1,0 +1,24 @@
+.music{top:18px;bottom:auto;right:max(14px,calc((100vw - 451px)/2 + 14px));width:44px;height:44px;padding:3px;background:#a50010;box-shadow:0 2px 8px #0003;cursor:pointer;border:1px solid #ffffffb3;touch-action:manipulation}
+.record{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:repeating-radial-gradient(circle,#242424 0 2px,#383838 3px 4px);animation:record-spin 4s linear infinite;animation-play-state:paused}
+.record span{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#a50010;border:1px solid #f9f5f0;color:#fff;font:14px Georgia,serif}
+.music.playing .record{animation-play-state:running}
+.music:not(.playing)::after{content:'';position:absolute;width:29px;height:2px;background:#fff;top:20px;left:7px;transform:rotate(-45deg);box-shadow:0 0 2px #a50010}
+.auto-scroll{position:fixed;top:72px;right:max(14px,calc((100vw - 451px)/2 + 14px));width:36px;height:36px;border:1px solid #ffffffb3;border-radius:50%;background:#a50010;color:#fff;z-index:1000;box-shadow:0 2px 8px #0002;font:18px Arial,sans-serif;cursor:pointer;touch-action:manipulation}
+.music:focus-visible,.auto-scroll:focus-visible{outline:2px solid #a50010;outline-offset:3px}
+@keyframes record-spin{to{transform:rotate(360deg)}}
+.bride-qr-panel{display:flex;align-items:flex-start;justify-content:center;padding-top:20px;box-sizing:border-box}
+.additional .bride-qr-button{display:block;margin:16px auto 0}
+.bride-qr-button,.bride-qr-download{border:1px solid #a50010;border-radius:24px;padding:13px 24px;background:#a50010;color:white;font:16px Arial,sans-serif;cursor:pointer;text-decoration:none}
+.bride-qr-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:calc(100% - 32px);max-width:420px;max-height:90vh;overflow:auto;border:1px solid #a50010;border-radius:16px;padding:24px;background:#fffaf5;color:#a50010;text-align:center;font:16px/1.5 Arial,sans-serif}.bride-qr-dialog::backdrop{background:#0008}.bride-qr-dialog h2{margin:0 0 16px;font-size:24px}.bride-qr-dialog img{display:block;max-width:100%;max-height:60vh;object-fit:contain;margin:0 auto 20px}.bride-qr-download{display:inline-block}.bride-qr-close{position:absolute;top:6px;right:12px;border:0;background:transparent;color:#a50010;font-size:30px;cursor:pointer}
+.signature-dialog{box-sizing:border-box;width:calc(100% - 28px);max-width:480px;border:1px solid #a50010;border-radius:18px;padding:24px;background:#fffaf5;color:#a50010;font:15px/1.5 Arial,sans-serif;max-height:90vh;overflow:auto}
+.signature-dialog::backdrop{background:#0008}
+.signature-form{position:relative}.signature-form h2{margin:0 0 18px;font-size:24px}.signature-form label{display:block}.signature-form input{box-sizing:border-box;width:100%;padding:10px;border:1px solid #cba7a7;border-radius:8px;font:inherit;background:white;color:#222}
+.signature-close{position:absolute;right:-10px;top:-15px;border:0;background:transparent;color:#a50010;font-size:30px;cursor:pointer}
+.signature-form canvas{display:block;box-sizing:border-box;width:100%;aspect-ratio:2/1;background:#fff;border:1px dashed #a50010;border-radius:10px;touch-action:none;cursor:crosshair}
+.signature-actions{display:flex;gap:12px;margin-top:18px}.signature-actions button{flex:1;border:1px solid #a50010;border-radius:8px;padding:11px;background:white;color:#a50010;font:inherit;cursor:pointer}.signature-actions .signature-save{background:#a50010;color:#fff}.signature-actions button:disabled{opacity:.6}
+.signature-message{min-height:23px;margin:12px 0 0}.signature-gallery{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:8px;padding:12px!important;overflow-y:auto!important}.signature-gallery>p{grid-column:1/-1;text-align:center;font:16px/1.5 Arial,sans-serif;color:#a50010}.signature-gallery figure{margin:0;padding:6px;background:#fffaf5;border-radius:8px}.signature-gallery svg{display:block;width:100%;height:auto}.signature-gallery figcaption{text-align:center;font:13px/1.4 Arial,sans-serif;color:#a50010;overflow-wrap:anywhere}
+.rsvp-feedback{position:fixed;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);box-sizing:border-box;width:calc(100% - 32px);max-width:415px;padding:16px 20px;border-radius:12px;z-index:10000000;background:#fffaf5;color:#a50010;border:1px solid #a50010;box-shadow:0 4px 24px #0003;text-align:center;font:600 16px/1.5 Arial,sans-serif;pointer-events:none}
+.rsvp-feedback[data-state=success]{background:#edf8ef;border-color:#2c753b;color:#225d2e}
+.rsvp-feedback[data-state=error]{background:#fff0f0}
+form[aria-busy=true] button[type=submit]{opacity:.65;cursor:wait}
+@media(prefers-reduced-motion:reduce){.record{animation:none}}

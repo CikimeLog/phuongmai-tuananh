@@ -1,0 +1,12 @@
+node_modules/
+backend/data/*.json
+backend/google-sheets.local.json
+backend/telegram.local.json
+outputs/
+*.local.json
+.env
+.env.*
+!.env.example
+*.log
+playback-preview.png
+frontend/assets/Backup/

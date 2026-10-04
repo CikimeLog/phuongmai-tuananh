@@ -1,0 +1,43 @@
+{
+  "bride": {
+    "name": "Phương Mai",
+    "father": "Triệu Quang Hưng",
+    "mother": "Hà Thị Thanh Hương",
+    "qrImage": ""
+  },
+  "groom": {
+    "name": "Tuấn Anh",
+    "father": "Nguyễn Văn Hiền",
+    "mother": "Bùi Thị Phượng"
+  },
+  "weddingDateTime": "25/10/2026 11:00:00 AM",
+  "timeZone": "Asia/Ho_Chi_Minh",
+  "venue": "Sảnh Hera 1- tầng 3, Trung tâm tiệc cưới Pandora Center",
+  "venueName": "Pandora Center",
+  "mapsUrl": "https://maps.app.goo.gl/kMMGG1snVEjeoSTP8",
+  "story": "123 story",
+  "music": "assets/background.mp3",
+  "bank": {
+    "bankCode": "",
+    "bankName": "",
+    "accountNo": "",
+    "accountName": "",
+    "transferNote": "",
+    "qrImage": ""
+  },
+  "lunarDate": {
+    "solarDate": "25.10.2026",
+    "text": "Tức ngày 16 tháng 9 năm Bính Ngọ"
+  },
+  "photos": {
+    "photo01": "assets/photo-01.JPG",
+    "photo02": "assets/photo-02.JPG",
+    "photo03": "assets/photo-03.jpg",
+    "photo04": "assets/photo-04.png",
+    "photo05": "assets/photo-05.jpg",
+    "photo06": "assets/photo-06.JPG",
+    "photo07": "assets/photo-07.png",
+    "photo08": "assets/photo-08.jpg",
+    "photo09": "assets/photo-09.jpg"
+  }
+}
