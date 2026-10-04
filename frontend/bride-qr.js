@@ -7,12 +7,13 @@
   if (!rsvp) return;
   const panel = document.createElement('div');
   panel.className = 'wedding-gift-panel';
-  panel.style.top = (parseFloat(rsvp.style.top) + parseFloat(rsvp.style.height) + 24) + 'px';
+  panel.style.top = (parseFloat(rsvp.style.top) + parseFloat(rsvp.style.height) + 250) + 'px';
   canvas.append(panel);
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'bride-qr-button';
-  button.textContent = 'Hộp mừng cưới online';
+  button.setAttribute('aria-label','Hộp mừng cưới online');
+  button.innerHTML = '<span class="gift-art" aria-hidden="true"><span class="gift-lid"></span><span class="gift-body"></span><span class="gift-heart">♥</span></span><span class="gift-label">Hộp mừng cưới online</span>'; 
   panel.append(button);
   const dialog = document.createElement('dialog');
   dialog.className = 'bride-qr-dialog';
@@ -37,7 +38,13 @@
   });
   image.onerror = () => {image.hidden = true;link.hidden = true;message.textContent = 'Chưa tải được ảnh QR. Vui lòng thử lại.';};
   button.onclick = async () => {
+    if (button.disabled) return;
     savedScroll = window.scrollY;
+    button.disabled = true;
+    button.classList.add('gift-opening');
+    await new Promise(resolve => setTimeout(resolve, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 750));
+    button.disabled = false;
+    button.classList.remove('gift-opening');
     dialog.showModal();
     dialog.querySelector('button').focus({preventScroll:true});
     window.scrollTo({top:savedScroll,behavior:'instant'});
