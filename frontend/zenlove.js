@@ -188,6 +188,15 @@ async function init() {
     story:config.story || 'Câu chuyện của chúng mình'
   };
   document.querySelectorAll('[data-config]').forEach(el=>{el.textContent=values[el.dataset.config] || '';});
+  document.querySelectorAll('[data-config="venue"]').forEach(el => {
+    el.style.display = 'block';
+    el.style.width = '340px';
+    el.style.maxWidth = '100%';
+    el.style.margin = '0 auto';
+    el.style.fontSize = '13px';
+    el.style.lineHeight = '1.45';
+    el.style.textWrap = 'balance';
+  });
   document.querySelectorAll('[data-config="dateWithWeekday"]').forEach(el => {
     if (!validDate) return;
     const weekday = document.createElement('span');
