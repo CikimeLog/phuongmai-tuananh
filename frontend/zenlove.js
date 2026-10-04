@@ -38,7 +38,7 @@ const observer = !reduced && 'IntersectionObserver' in window ? new Intersection
 }, {threshold:0.05}) : null;
 document.querySelectorAll('[data-transition-key]').forEach(el => {
   el.style.opacity = '1'; el.style.visibility = 'visible'; el.style.animation = 'none';
-  observer?.observe(el);
+  // Observe after the envelope opens so entrance effects remain visible.
 });
 const music = document.getElementById('music');
 const musicButton = document.getElementById('music-button');
@@ -68,6 +68,7 @@ invitationCover.querySelector('.cover-open').onclick = () => {
     document.documentElement.style.overflow = previousOverflow;
     window.scrollTo({top:0,behavior:'instant'});
     scrollPosition = 0;
+    document.querySelectorAll('[data-transition-key]').forEach(el => observer?.observe(el));
     resumeAt = performance.now() + 3000;
     musicButton.focus({preventScroll:true});
   }, reduced ? 0 : 2250);
