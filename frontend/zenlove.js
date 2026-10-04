@@ -45,16 +45,25 @@ const musicButton = document.getElementById('music-button');
 musicButton.innerHTML = '<span class="record" aria-hidden="true"><span>♫</span></span>';
 music.preload = 'auto';
 let musicWanted = true;
+const musicPrompt = document.createElement('button');
+musicPrompt.className = 'music-prompt';
+musicPrompt.textContent = '♫ Chạm để mở thiệp cùng nhạc';
+musicPrompt.hidden = true;
+document.body.append(musicPrompt);
+musicPrompt.onclick = () => { musicWanted = true; startMusic(); };
 function syncMusic() {
   const playing = !music.paused;
   musicButton.classList.toggle('playing', playing);
   musicButton.setAttribute('aria-pressed', String(playing));
   musicButton.setAttribute('aria-label', playing ? 'Tắt nhạc' : 'Bật nhạc');
   musicButton.title = playing ? 'Tắt nhạc' : 'Chạm để bật nhạc';
+  if (playing || !musicWanted) musicPrompt.hidden = true;
 }
 async function startMusic() {
   if (!musicWanted || !music.paused) return;
-  try { await music.play(); } catch { /* Retry within the first user gesture. */ }
+  try { await music.play(); } catch (error) {
+    if (error.name === 'NotAllowedError' && musicWanted) musicPrompt.hidden = false;
+  }
   syncMusic();
 }
 music.addEventListener('play', syncMusic);
@@ -63,9 +72,10 @@ musicButton.onclick = () => {
   musicWanted = music.paused;
   if (musicWanted) startMusic(); else music.pause();
 };
-for (const event of ['pointerdown', 'keydown']) {
+// Mobile browsers grant audio activation on tap completion, not pointerdown.
+for (const event of ['click', 'touchend', 'keydown']) {
   document.addEventListener(event, e => {
-    if (!e.target.closest?.('#music-button')) startMusic();
+    if (!e.target.closest?.('#music-button,.music-prompt')) startMusic();
   }, {passive:true});
 }
 syncMusic();
@@ -163,7 +173,7 @@ async function init() {
     el.replaceChildren(weekday, day);
   });
   document.title = `${values['bride.name']} & ${values['groom.name']} | Thiệp cưới`;
-  if(config.music) music.src = config.music;
+  if(config.music && new URL(config.music, location.href).href !== music.src) music.src = config.music;
   startMusic();
   const directions = document.getElementById('directions');
   const mapsUrl = config.mapsUrl || (config.venue ? 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(config.venue) : '');
