@@ -291,7 +291,7 @@ if(form) {
       const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':onPages?'text/plain;charset=UTF-8':'application/json'},signal:AbortSignal.timeout(30000),body:JSON.stringify(payload)});
       const result=await response.json();if(!response.ok||result.ok!==true)throw new Error(result.error||'Không gửi được xác nhận.');
       pendingRsvp=null;
-      document.getElementById('status').textContent='Đã gửi xác nhận. Cảm ơn bạn!';
+      document.getElementById('status').textContent='';
       showFeedback('Đã gửi xác nhận. Cảm ơn bạn!','success');
     }catch(error){
       const message = error.name === 'TimeoutError' ? 'Kết nối chậm. Vui lòng kiểm tra mạng và thử lại.' : error instanceof TypeError ? 'Không thể kết nối. Vui lòng kiểm tra mạng và thử lại.' : error.message;
