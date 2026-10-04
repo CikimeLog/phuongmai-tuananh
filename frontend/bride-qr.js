@@ -7,6 +7,7 @@
   if (!rsvp) return;
   const panel = document.createElement('div');
   panel.className = 'wedding-gift-panel';
+  panel.dataset.transitionKey = 'wedding-gift-slide-up-0.9-0.15-false';
   panel.style.top = (parseFloat(rsvp.style.top) + parseFloat(rsvp.style.height) + 205) + 'px';
   canvas.append(panel);
   const button = document.createElement('button');
