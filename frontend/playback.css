@@ -44,3 +44,4 @@ form[aria-busy=true] button[type=submit]{opacity:.65;cursor:wait}
 .invitation-cover.unsealing .cover-letter{transform:translateY(-72%)}
 .invitation-cover.unsealing .cover-open{opacity:.5;cursor:default;transition:opacity .3s}
 @media(prefers-reduced-motion:reduce){.cover-flap,.cover-letter,.cover-seal{transition:none}}
+.wedding-gift-panel{position:absolute;left:0;width:100%;display:flex;justify-content:center;z-index:64}.wedding-gift-panel .bride-qr-button{font-size:15px;padding:12px 22px}
