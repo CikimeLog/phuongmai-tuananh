@@ -12,8 +12,9 @@ Chỉ sửa `backend/config.json`, lưu file rồi tải lại trang. Không c�
 | lunarDate.solarDate | Ngày dương tương ứng, định dạng `DD.MM.YYYY`, hiện là `25.10.2026` |
 | lunarDate.text | Dòng âm lịch đã đối chiếu: `Tức ngày 16 tháng 9 năm Bính Ngọ`. Khi đổi ngày cưới, cập nhật cả hai trường lunarDate; nếu ngày không khớp, dòng âm lịch sẽ ẩn để không hiển thị dữ liệu cũ. Chưa tự chuyển đổi âm lịch. |
 | timeZone | Múi giờ hiển thị, mặc định `Asia/Ho_Chi_Minh` |
-| venueName | Tên nhà hàng hoặc địa điểm |
-| venue | Địa chỉ đầy đủ, cũng dùng cho nút chỉ đường |
+| venueHall | Tên sảnh và tầng, hiển thị phía trên tên địa điểm |
+| venueName | Tên nhà hàng hoặc địa điểm, hiển thị lớn màu đỏ |
+| venue | Địa chỉ đầy đủ; dùng \n trong chuỗi JSON để xuống dòng trên thiệp. Cũng dùng cho nút chỉ đường khi không có mapsUrl |
 | mapsUrl | Link Google Maps riêng; bỏ trống sẽ tạo link từ venue |
 | story | Câu chuyện của hai bạn |
 | music | Đường dẫn nhạc nền |
@@ -26,3 +27,7 @@ Các thông tin cá nhân ban đầu đều để trống để không dùng tê
 Các khung ảnh cưới đã nối với file local và danh sách `photos`. Ảnh 01, 02 và 06 hiện dùng file JPG bạn đã thay. Các họa tiết trang trí SVG còn lấy từ mẫu ZenLove. Nhạc dùng file local `frontend/assets/background.mp3`.
 
 Ảnh đã tối ưu trực tiếp trong `frontend/assets`, không dùng thư mục `optimized`. JPEG lớn được thu nhỏ tối đa 1080 × 1620 px và nén progressive; ảnh nhỏ sẵn được giữ để tránh nén lại. Khi thêm ảnh mới, chạy `python optimize-images.py` (cần Pillow); script ghi đè ảnh lớn tại chỗ, rồi tải lại trang.
+
+## Sao chép số tài khoản
+
+Điền bank.accountNo (chuỗi có dấu ngoặc kép để giữ số 0 đầu), bank.bankName và bank.accountName trong backend/config.json cho bản local, frontend/config.json cho bản GitHub. Nút Copy số tài khoản trong hộp mừng cưới tự hiện khi accountNo đã điền. Nếu có bride.accountNo, bride.bankName hoặc bride.accountName thì ưu tiên thông tin cô dâu tương ứng.

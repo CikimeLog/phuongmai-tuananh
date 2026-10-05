@@ -27,6 +27,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const observer = !reduced && 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
   entries.forEach(({target, isIntersecting}) => {
     if (!isIntersecting) return;
+    target.style.opacity = '1';
     const key = target.dataset.transitionKey;
     const match = key.match(/-(slide-left|slide-right|slide-up|slide-down|fade-in)-([\d.]+)-([\d.]+)-/);
     if (match) {
@@ -35,9 +36,11 @@ const observer = !reduced && 'IntersectionObserver' in window ? new Intersection
     }
     observer.unobserve(target);
   });
-}, {threshold:0.05}) : null;
+// Start entrance effects inside the viewing area, above the bottom edge.
+}, {rootMargin:`0px 0px -${Math.round(window.innerHeight * 0.3)}px 0px`,threshold:0}) : null;
 document.querySelectorAll('[data-transition-key]').forEach(el => {
-  el.style.opacity = '1'; el.style.visibility = 'visible'; el.style.animation = 'none';
+  el.style.opacity = observer ? '0' : '1';
+  el.style.visibility = 'visible'; el.style.animation = 'none';
   // Observe after the envelope opens so entrance effects remain visible.
 });
 const music = document.getElementById('music');
@@ -48,8 +51,10 @@ let musicWanted = true;
 let invitationOpened = false;
 const invitationCover = document.createElement('dialog');
 invitationCover.className = 'invitation-cover';
+invitationCover.tabIndex = -1;
+invitationCover.setAttribute('autofocus', '');
 invitationCover.setAttribute('aria-label', 'Mở thiệp cưới');
-invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Anh & Mai</strong><small>25 · 10 · 2026</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">A <i>&</i> M</span></div><h1><span class="cover-groom">Tuấn Anh</span><em>&</em><span class="cover-bride">Phương Mai</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true">↗</span></button></div>';
+invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Anh & Mai</strong><small>25 · 10 · 2026</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">A <i>&</i> M</span></div><h1><span class="cover-groom">Tuấn Anh</span><em>&</em><span class="cover-bride">Phương Mai</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg></span></button></div>';
 document.body.append(invitationCover);
 const previousOverflow = document.documentElement.style.overflow;
 document.documentElement.style.overflow = 'hidden';
@@ -62,7 +67,7 @@ invitationCover.querySelector('.cover-open').onclick = () => {
   startMusic();
   invitationCover.querySelector('.cover-open').disabled = true;
   invitationCover.classList.add('unsealing');
-  if (!reduced) setTimeout(() => invitationCover.classList.add('opening'), 1600);
+  if (!reduced) setTimeout(() => invitationCover.classList.add('opening'), 2150);
   setTimeout(() => {
     invitationCover.close();
     document.documentElement.style.overflow = previousOverflow;
@@ -71,7 +76,7 @@ invitationCover.querySelector('.cover-open').onclick = () => {
     document.querySelectorAll('[data-transition-key]').forEach(el => observer?.observe(el));
     resumeAt = performance.now() + 3000;
     musicButton.focus({preventScroll:true});
-  }, reduced ? 0 : 2250);
+  }, reduced ? 0 : 2800);
 };
 const musicPrompt = document.createElement('button');
 musicPrompt.className = 'music-prompt';
@@ -189,6 +194,13 @@ async function init() {
     story:config.story || 'Câu chuyện của chúng mình'
   };
   document.querySelectorAll('[data-config]').forEach(el=>{el.textContent=values[el.dataset.config] || '';});
+  document.querySelectorAll('[data-config="venueName"]').forEach(el => {
+    if (!config.venueHall) return;
+    const hall = document.createElement('span');
+    hall.className = 'venue-hall';
+    hall.textContent = config.venueHall;
+    el.before(hall);
+  });
   document.querySelectorAll('[data-config="venue"]').forEach(el => {
     el.style.display = 'block';
     el.style.width = '340px';
@@ -197,7 +209,22 @@ async function init() {
     el.style.fontSize = '13px';
     el.style.lineHeight = '1.45';
     el.style.textWrap = 'balance';
+    el.style.whiteSpace = 'pre-line';
   });
+  function spaceWeddingTime() {
+    const address = document.querySelector('.text-box-component[data-node-id="PgIa1pbqS-"]');
+    const text = address?.querySelector('[contenteditable]');
+    if (!text) return;
+    const timeTop = Math.max(1455.48, 1405.18 + text.offsetHeight + 14);
+    const shift = timeTop - 1455.48;
+    const positions = {hQO6Cfwv4H:timeTop, WasT3iVjkw:1515.73 + shift, U_zDbp2bSZ:1577.77 + shift, '3yQAnYMOcB':1616.25 + shift, XdieWgAun8:1681.15 + shift};
+    Object.entries(positions).forEach(([id, top]) => {
+      document.querySelector(`.text-box-component[data-node-id="${id}"]`)?.style.setProperty('top', `${top}px`, 'important');
+    });
+  }
+  requestAnimationFrame(spaceWeddingTime);
+  document.fonts.ready.then(spaceWeddingTime);
+  window.addEventListener('resize', spaceWeddingTime);
   document.querySelectorAll('[data-config="dateWithWeekday"]').forEach(el => {
     if (!validDate) return;
     const weekday = document.createElement('span');
@@ -250,6 +277,116 @@ async function init() {
   tick(); setInterval(tick,1000);
 }
 init().catch(error => document.getElementById('status').textContent=error.message);
+// View wedding photos at full size without leaving the invitation.
+const photoViewer = document.createElement('dialog');
+photoViewer.className = 'photo-viewer';
+photoViewer.setAttribute('aria-label', 'Xem ảnh cưới');
+photoViewer.innerHTML = '<div class="photo-viewer-toolbar"><button type="button" data-zoom="out" aria-label="Thu nhỏ">−</button><button type="button" data-zoom="reset" aria-label="Về kích thước ban đầu">100%</button><button type="button" data-zoom="in" aria-label="Phóng to">+</button><button type="button" class="photo-viewer-close" aria-label="Đóng ảnh">×</button></div><div class="photo-viewer-stage"><img alt="Ảnh cưới Tuấn Anh và Phương Mai" draggable="false"></div><p class="photo-viewer-hint">Chạm hai lần hoặc dùng hai ngón tay để phóng to</p>';
+document.body.append(photoViewer);
+const photoStage = photoViewer.querySelector('.photo-viewer-stage');
+const fullPhoto = photoViewer.querySelector('img');
+const zoomLabel = photoViewer.querySelector('[data-zoom="reset"]');
+let photoZoom = 1, photoX = 0, photoY = 0, photoOverflow = '', photoTrigger;
+const photoPointers = new Map();
+function renderPhoto() {
+  const bounds = photoStage.getBoundingClientRect();
+  const maxX = Math.max(0, (fullPhoto.clientWidth * photoZoom - bounds.width) / 2);
+  const maxY = Math.max(0, (fullPhoto.clientHeight * photoZoom - bounds.height) / 2);
+  photoX = Math.max(-maxX, Math.min(maxX, photoX));
+  photoY = Math.max(-maxY, Math.min(maxY, photoY));
+  fullPhoto.style.transform = `translate(${photoX}px,${photoY}px) scale(${photoZoom})`;
+  zoomLabel.textContent = `${Math.round(photoZoom * 100)}%`;
+}
+function zoomPhoto(value) {
+  photoZoom = Math.max(1, Math.min(4, value));
+  renderPhoto();
+}
+fullPhoto.addEventListener('load', renderPhoto);
+photoViewer.querySelectorAll('[data-zoom]').forEach(button => button.onclick = () => {
+  zoomPhoto(button.dataset.zoom === 'reset' ? 1 : photoZoom + (button.dataset.zoom === 'in' ? .5 : -.5));
+});
+photoViewer.querySelector('.photo-viewer-close').onclick = () => photoViewer.close();
+photoViewer.addEventListener('close', () => {
+  document.documentElement.style.overflow = photoOverflow;
+  photoPointers.clear();
+  pauseScroll();
+  photoTrigger?.focus({preventScroll:true});
+});
+function openPhoto(element) {
+  const background = getComputedStyle(element).backgroundImage;
+  const match = background.match(/^url\(["']?(.*?)["']?\)$/);
+  if (!match || photoViewer.open) return;
+  photoTrigger = element;
+  photoOverflow = document.documentElement.style.overflow;
+  document.documentElement.style.overflow = 'hidden';
+  photoZoom = 1; photoX = 0; photoY = 0;
+  fullPhoto.src = match[1];
+  photoViewer.showModal();
+  renderPhoto();
+}
+document.querySelectorAll('[data-photo]').forEach(element => {
+  element.setAttribute('role', 'button');
+  element.tabIndex = 0;
+  element.setAttribute('aria-label', 'Phóng to ảnh cưới');
+  element.onclick = () => openPhoto(element);
+  element.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openPhoto(element); }
+  });
+});
+photoStage.addEventListener('dblclick', () => zoomPhoto(photoZoom > 1 ? 1 : 2));
+photoStage.addEventListener('wheel', event => {
+  event.preventDefault(); zoomPhoto(photoZoom - event.deltaY * .002);
+}, {passive:false});
+let lastPhotoTap = 0;
+let photoGestureMoved = false;
+let photoPointerStart;
+photoStage.addEventListener('pointerdown', event => {
+  if (photoPointers.size === 0) {
+    photoGestureMoved = false;
+    photoPointerStart = {x:event.clientX, y:event.clientY};
+  }
+  photoPointers.set(event.pointerId, {x:event.clientX, y:event.clientY});
+  if (photoPointers.size > 1) { photoGestureMoved = true; lastPhotoTap = 0; }
+  photoStage.setPointerCapture(event.pointerId);
+});
+photoStage.addEventListener('pointermove', event => {
+  const before = photoPointers.get(event.pointerId);
+  if (!before) return;
+  const other = [...photoPointers.entries()].find(([id]) => id !== event.pointerId)?.[1];
+  if (other) {
+    const oldDistance = Math.hypot(before.x - other.x, before.y - other.y);
+    const newDistance = Math.hypot(event.clientX - other.x, event.clientY - other.y);
+    if (oldDistance > 0) zoomPhoto(photoZoom * newDistance / oldDistance);
+    lastPhotoTap = 0;
+  } else if (photoZoom > 1) {
+    photoX += event.clientX - before.x; photoY += event.clientY - before.y;
+    renderPhoto();
+  }
+  if (Math.hypot(event.clientX - before.x, event.clientY - before.y) > 3) { photoGestureMoved = true; lastPhotoTap = 0; }
+  photoPointers.set(event.pointerId, {x:event.clientX, y:event.clientY});
+});
+photoStage.addEventListener('pointerup', event => {
+  const moved = photoGestureMoved || !photoPointerStart || Math.hypot(event.clientX - photoPointerStart.x, event.clientY - photoPointerStart.y) > 6;
+  const bounds = fullPhoto.getBoundingClientRect();
+  const outsidePhoto = event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+  if (photoPointers.size === 1 && !moved && outsidePhoto) {
+    photoPointers.delete(event.pointerId);
+    photoViewer.close();
+    lastPhotoTap = 0;
+    return;
+  }
+  if (event.pointerType === 'touch' && photoPointers.size === 1 && !photoGestureMoved) {
+    const now = performance.now();
+    if (lastPhotoTap && now - lastPhotoTap < 300) { zoomPhoto(photoZoom > 1 ? 1 : 2); lastPhotoTap = 0; }
+    else lastPhotoTap = now;
+  }
+  photoPointers.delete(event.pointerId);
+});
+photoStage.addEventListener('pointercancel', event => { photoPointers.delete(event.pointerId); lastPhotoTap = 0; });
+photoViewer.addEventListener('click', event => {
+  if (event.target === photoViewer || event.target.classList.contains('photo-viewer-hint') || event.target.classList.contains('photo-viewer-toolbar')) photoViewer.close();
+});
+window.addEventListener('resize', () => { if (photoViewer.open) renderPhoto(); });
 const form=document.querySelector('form');
 if(form) {
   const feedback = document.createElement('div');
@@ -259,19 +396,23 @@ if(form) {
   feedback.hidden = true;
   document.body.append(feedback);
   let feedbackTimer;
+  function hideFeedback() {
+    clearTimeout(feedbackTimer);
+    feedback.hidden = true;
+  }
   function showFeedback(message, state) {
     clearTimeout(feedbackTimer);
     feedback.textContent = message;
     feedback.dataset.state = state;
     feedback.hidden = false;
-    if (state === 'success') feedbackTimer = setTimeout(() => { feedback.hidden = true; }, 4000);
+    if (state !== 'pending') feedbackTimer = setTimeout(hideFeedback, 4000);
   }
   form.addEventListener('invalid', event => {
     const message = event.target.id === 'rsvp-name' ? 'Vui lòng nhập họ và tên.' : 'Vui lòng chọn số người tham dự.';
     showFeedback(message,'error');
   }, true);
-  form.addEventListener('input', () => { feedback.hidden = true; });
-  form.addEventListener('change', () => { feedback.hidden = true; });
+  form.addEventListener('input', hideFeedback);
+  form.addEventListener('change', hideFeedback);
   let sending = false;
   let pendingRsvp = null;
   const name=form.querySelector('#rsvp-name'); name.required=true;

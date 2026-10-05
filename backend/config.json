@@ -12,18 +12,19 @@
   },
   "weddingDateTime": "25/10/2026 11:00:00 AM",
   "timeZone": "Asia/Ho_Chi_Minh",
-  "venue": "Sảnh Hera 1- tầng 3, TTTC Pandora Center số 12 Võ Nguyên Giáp",
+  "venue": "Số 12 Võ Nguyên Giáp, Phường An Biên, TP Hải Phòng",
   "venueName": "Pandora Center",
+  "venueHall": "Tại Sảnh Hera 1 - tầng 3,",
   "mapsUrl": "https://maps.app.goo.gl/kMMGG1snVEjeoSTP8",
   "story": "123 story",
   "music": "assets/background.mp3",
   "bank": {
     "bankCode": "",
     "bankName": "",
-    "accountNo": "",
+    "accountNo": "969337922",
     "accountName": "",
     "transferNote": "",
-    "qrImage": ""
+    "qrImage": "assets/QR_MAI.jpg"
   },
   "lunarDate": {
     "solarDate": "25.10.2026",

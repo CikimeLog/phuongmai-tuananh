@@ -18,9 +18,29 @@
   panel.append(button);
   const dialog = document.createElement('dialog');
   dialog.className = 'bride-qr-dialog';
-  dialog.innerHTML = '<button type="button" class="bride-qr-close" aria-label="Đóng ảnh QR">×</button><h2>Hộp mừng cưới online</h2><p class="bride-qr-message" role="status"></p><img alt="Mã QR cô dâu" hidden><a class="bride-qr-download" hidden download="QR-co-dau">Tải ảnh QR</a>';
+  dialog.innerHTML = '<button type="button" class="bride-qr-close" aria-label="Đóng ảnh QR">×</button><h2>Hộp mừng cưới online</h2><p class="bride-qr-message" role="status"></p><img alt="Mã QR cô dâu" hidden><div class="bride-qr-actions"><button type="button" class="bank-copy-button" hidden>Copy số tài khoản</button><a class="bride-qr-download" hidden download="QR-co-dau">Tải ảnh QR</a></div><input class="bank-account-number" aria-label="Số tài khoản" readonly hidden><p class="bank-copy-status" role="status" aria-live="polite"></p>';
   document.body.append(dialog);
   const image = dialog.querySelector('img'), link = dialog.querySelector('a'), message = dialog.querySelector('p');
+  const accountInput = dialog.querySelector('.bank-account-number');
+  const copyButton = dialog.querySelector('.bank-copy-button');
+  const copyStatus = dialog.querySelector('.bank-copy-status');
+  let copyTimer;
+  copyButton.onclick = async () => {
+    clearTimeout(copyTimer);
+    try {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(accountInput.value);
+      else {
+        accountInput.hidden = false; accountInput.focus(); accountInput.select(); accountInput.setSelectionRange(0, accountInput.value.length);
+        if (!document.execCommand('copy')) throw new Error('copy');
+        accountInput.hidden = true;
+      }
+      copyStatus.textContent = 'Đã sao chép số tài khoản';
+    } catch {
+      accountInput.hidden = false; accountInput.focus(); accountInput.select(); accountInput.setSelectionRange(0, accountInput.value.length);
+      copyStatus.textContent = 'Vui lòng nhấn giữ số tài khoản và chọn Sao chép.';
+    }
+    copyTimer = setTimeout(() => { copyStatus.textContent = ''; }, 4000);
+  };
   dialog.querySelector('button').onclick = () => dialog.close();
   let pressedOutside = false;
   function outside(event) {
@@ -34,6 +54,7 @@
   });
   let savedScroll = 0;
   dialog.addEventListener('close', () => {
+    clearTimeout(copyTimer);
     button.focus({preventScroll:true});
     window.scrollTo({top:savedScroll,behavior:'instant'});
   });
@@ -49,11 +70,17 @@
     dialog.showModal();
     dialog.querySelector('button').focus({preventScroll:true});
     window.scrollTo({top:savedScroll,behavior:'instant'});
-    image.hidden = true;link.hidden = true;message.textContent = 'Đang tải ảnh QR…';
+    image.hidden = true;link.hidden = true;copyButton.hidden = true;copyStatus.textContent = '';accountInput.hidden = true;message.textContent = 'Đang tải ảnh QR…';
     try {
       const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config');
       if(!response.ok) throw new Error('Không tải được ảnh QR. Vui lòng thử lại.');
       const config = await response.json();
+      const accountNo = String(config.bride?.accountNo || config.bank?.accountNo || '').trim();
+      if (accountNo && accountNo !== 'SO_TAI_KHOAN_MAU') {
+        accountInput.value = accountNo;
+
+        copyButton.hidden = false;
+      }
       const file = config.bride?.qrImage || config.bank?.qrImage;
       if(!file) {message.textContent = 'Ảnh QR cô dâu chưa được cập nhật.';return;}
       const url = new URL(file,location.href);

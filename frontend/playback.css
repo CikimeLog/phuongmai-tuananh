@@ -31,16 +31,16 @@ form[aria-busy=true] button[type=submit]{opacity:.65;cursor:wait}
 /* Keep Vietnamese accents in one system serif font on the opening cover. */
 .cover-card h1{font-family:"Times New Roman",Times,serif;letter-spacing:normal;font-kerning:normal}.cover-card h1 span{font-family:inherit;letter-spacing:normal}.cover-message{font-family:"Times New Roman",Times,serif}
 /* The flap opens first, then the invitation slides out of the envelope. */
-.cover-envelope{overflow:visible;perspective:900px;isolation:isolate}
+.cover-envelope{overflow:visible;isolation:isolate}
 .cover-envelope::before,.cover-envelope::after{display:none}
-.cover-flap{position:absolute;inset:0;z-index:4;background:#fffaf3;clip-path:polygon(0 0,100% 0,50% 62%);transform-origin:top center;backface-visibility:hidden;transition:transform .75s cubic-bezier(.4,0,.2,1) .2s}
+.cover-flap{position:absolute;inset:0;z-index:4;background:#fffaf3;clip-path:polygon(0 0,100% 0,50% 62%);transform-origin:top center;backface-visibility:visible;transition:transform .75s cubic-bezier(.4,0,.2,1) .2s}
 .cover-pocket{position:absolute;inset:0;z-index:3;border-radius:4px;background:linear-gradient(32deg,#f0e4d6 49.5%,transparent 50%) left/50% 100% no-repeat,linear-gradient(-32deg,#f0e4d6 49.5%,transparent 50%) right/50% 100% no-repeat;pointer-events:none}
 .cover-pocket::after{content:'';position:absolute;inset:0;background:#f7ecdf;clip-path:polygon(0 100%,50% 38%,100% 100%);border-radius:4px}
 .cover-letter{position:absolute;left:8%;top:7%;width:84%;height:85%;z-index:2;box-sizing:border-box;padding:19px 10px;background:#fffdf8;border:1px solid #d7bda7;border-radius:3px;box-shadow:0 4px 14px #77331c18;color:#a50010;display:flex;flex-direction:column;justify-content:center;gap:9px;transition:transform .85s cubic-bezier(.2,.7,.2,1) .85s}
 .cover-letter span{font:italic 11px "Times New Roman",serif}.cover-letter strong{font:italic 24px "Times New Roman",serif;font-weight:normal}.cover-letter small{font:9px Arial,sans-serif;letter-spacing:2px}
 .cover-seal{z-index:5;transition:opacity .25s,transform .35s}
 .invitation-cover.unsealing .cover-seal{opacity:0;transform:translateX(-50%) scale(1.2)}
-.invitation-cover.unsealing .cover-flap{transform:rotateX(180deg)}
+.invitation-cover.unsealing .cover-flap{transform:scaleY(-1)}
 .invitation-cover.unsealing .cover-letter{transform:translateY(-72%)}
 .invitation-cover.unsealing .cover-open{opacity:.5;cursor:default;transition:opacity .3s}
 @media(prefers-reduced-motion:reduce){.cover-flap,.cover-letter,.cover-seal{transition:none}}
@@ -56,3 +56,88 @@ form[aria-busy=true] button[type=submit]{opacity:.65;cursor:wait}
 
 #countdown-panel h2{font-family:"Times New Roman",Times,serif;font-style:italic;font-size:28px;line-height:1.35;color:#a50010;letter-spacing:normal}
 #countdown-panel .timer strong{font-family:"SVN Gilroy",Arial,sans-serif;font-size:32px;font-weight:normal;font-style:normal;font-variant-numeric:tabular-nums}
+
+/* Consistent touch button styling, including Safari on iPhone. */
+.cover-open{-webkit-appearance:none;appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;min-width:148px;padding:12px 24px;border:1px solid #a50010;border-radius:999px;font:500 16px/1.25 Arial,sans-serif;letter-spacing:.2px;-webkit-text-fill-color:#fff;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 12px #a5001014}
+.cover-open span{display:inline-flex;margin:0}.cover-open svg{width:16px;height:16px;display:block}.cover-open:active:not(:disabled){transform:translateY(1px)}
+.invitation-cover:focus{outline:none}
+
+/* A brief tactile response before the envelope opens. */
+.cover-open{position:relative;isolation:isolate;transition:background-color .2s,box-shadow .2s}
+.cover-open::after{content:'';position:absolute;inset:-1px;border:1px solid #a50010;border-radius:inherit;opacity:0;pointer-events:none}
+.invitation-cover.unsealing .cover-open{opacity:1;animation:cover-button-press .55s ease both}
+.invitation-cover.unsealing .cover-open::after{animation:cover-button-ripple .7s ease-out both}
+.invitation-cover.unsealing .cover-open svg{animation:cover-icon-lift .65s ease both}
+.cover-flap{-webkit-backface-visibility:visible;backface-visibility:visible;transition-delay:.4s}
+.cover-letter{transition-delay:1s}
+@keyframes cover-button-press{0%{transform:scale(1)}30%{transform:scale(.94);box-shadow:0 2px 5px #a5001020}65%{transform:scale(1.025)}100%{transform:scale(1);opacity:.65}}
+@keyframes cover-button-ripple{0%{transform:scale(1);opacity:.4}100%{transform:scale(1.22,1.55);opacity:0}}
+@keyframes cover-icon-lift{0%,100%{transform:translateY(0)}45%{transform:translateY(-3px) rotate(-8deg)}}
+@media(prefers-reduced-motion:reduce){.invitation-cover.unsealing .cover-open,.invitation-cover.unsealing .cover-open::after,.invitation-cover.unsealing .cover-open svg{animation:none}.cover-open{transition:none}}
+/* Hover feedback only on devices with a precise pointer. */
+.cover-open{transition:background-color .2s,box-shadow .2s,transform .2s}
+.cover-open svg{transition:transform .2s}
+@media(hover:hover) and (pointer:fine){
+  .cover-open:hover:not(:disabled){background:#b40b1c;transform:translateY(-2px);box-shadow:0 7px 18px #a5001026}
+  .cover-open:hover:not(:disabled) svg{transform:translateY(-1px) rotate(-6deg)}
+  .cover-open:active:not(:disabled){transform:translateY(0) scale(.97);box-shadow:0 2px 6px #a5001020}
+}
+@media(prefers-reduced-motion:reduce){
+  .cover-open,.cover-open svg{transition:none}
+  .cover-open:hover:not(:disabled),.cover-open:hover:not(:disabled) svg,.cover-open:active:not(:disabled){transform:none}
+}
+/* Keep the inner invitation concealed until the flap has opened. */
+.cover-letter{opacity:0;transition:transform .85s cubic-bezier(.2,.7,.2,1) 1.2s,opacity .2s ease 1.2s}
+.invitation-cover.unsealing .cover-letter{opacity:1}
+@media(prefers-reduced-motion:reduce){.cover-letter{transition:none}}
+/* Give the time breathing room below the venue caption. */
+.text-box-component[data-node-id="hQO6Cfwv4H"]{top:1435.48px!important}
+.text-box-component[data-node-id="hQO6Cfwv4H"] [contenteditable]{line-height:1!important}
+.text-box-component[data-node-id="3yQAnYMOcB"] [contenteditable]{font-style:italic!important}
+
+.text-box-component[data-node-id="XdieWgAun8"] [contenteditable]{font-style:italic!important}
+
+/* Keep the flap behind the concealed letter throughout the opening turn. */
+.cover-flap{transition:transform .75s cubic-bezier(.4,0,.2,1) .4s}
+.invitation-cover.unsealing .cover-flap{z-index:1}
+@media(prefers-reduced-motion:reduce){.cover-flap{transition:none}}
+/* Fullscreen photo viewer with touch zoom and pan. */
+[data-photo]{cursor:zoom-in;pointer-events:auto!important}
+[data-photo]:focus-visible{outline:2px solid #a50010;outline-offset:-3px}
+.photo-viewer{position:fixed;inset:0;box-sizing:border-box;width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;padding:0;background:#171312;color:#fff;overflow:hidden}
+.photo-viewer[open]{display:flex;flex-direction:column}
+.photo-viewer::backdrop{background:#171312}
+.photo-viewer-toolbar{display:flex;align-items:center;gap:8px;padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));z-index:1}
+.photo-viewer-toolbar button{appearance:none;-webkit-appearance:none;min-width:44px;height:44px;border:1px solid #ffffff40;border-radius:50%;background:#ffffff12;color:#fff;-webkit-text-fill-color:#fff;font:24px/1 Arial,sans-serif;cursor:pointer;touch-action:manipulation}
+.photo-viewer-toolbar [data-zoom="reset"]{min-width:64px;border-radius:22px;font-size:14px}
+.photo-viewer-toolbar .photo-viewer-close{margin-left:auto;font-size:30px}
+.photo-viewer-toolbar button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.photo-viewer-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;cursor:grab}
+.photo-viewer-stage:active{cursor:grabbing}
+.photo-viewer-stage img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;user-select:none;-webkit-user-select:none;pointer-events:none;transform-origin:center}
+.photo-viewer-hint{margin:0;padding:14px 16px max(18px,env(safe-area-inset-bottom));text-align:center;font:13px/1.5 Arial,sans-serif;color:#ffffffa8}
+@media(hover:hover) and (pointer:fine){.photo-viewer-toolbar button:hover{background:#ffffff26}}
+/* Leave space for the three explicit address lines. */
+.text-box-component[data-node-id="hQO6Cfwv4H"]{top:1455.48px!important}
+.text-box-component[data-node-id="WasT3iVjkw"]{top:1515.73px!important}
+.text-box-component[data-node-id="U_zDbp2bSZ"]{top:1577.77px!important}
+.text-box-component[data-node-id="3yQAnYMOcB"]{top:1616.25px!important}
+.text-box-component[data-node-id="XdieWgAun8"]{top:1681.15px!important}
+/* Hall caption above the large red venue name, street address below it. */
+.venue-hall{display:block;font:700 15px/1.45 "SVN Gilroy",Arial,sans-serif;color:#000;margin-bottom:8px}
+.text-box-component[data-node-id="PgIa1pbqS-"]{top:1405.18px!important}
+[data-config="venueName"]{font-size:36px}
+.venue-hall{font-size:14px}
+
+.text-box-component[data-node-id="36_sAoFGqB"] [contenteditable]{font-style:italic!important}
+
+.bank-copy-panel{margin:0 0 18px;padding:14px;border:1px solid #e4cec0;border-radius:12px;background:#fffaf5}
+.bank-account-label{margin:0 0 8px;font:14px/1.5 Arial,sans-serif;color:#866d60}
+.bank-account-number{box-sizing:border-box;width:100%;border:0;background:transparent;text-align:center;color:#a50010;font:600 21px/1.5 Arial,sans-serif;padding:6px;letter-spacing:1px}
+.bank-copy-button{appearance:none;-webkit-appearance:none;min-height:44px;margin-top:10px;border:1px solid #a50010;border-radius:24px;background:#a50010;color:#fff;-webkit-text-fill-color:#fff;padding:10px 20px;font:15px/1.4 Arial,sans-serif;cursor:pointer;touch-action:manipulation}
+.bank-copy-status{min-height:20px;margin:8px 0 0;color:#49683e;font:13px/1.5 Arial,sans-serif}
+.bank-copy-button:focus-visible{outline:2px solid #a50010;outline-offset:3px}
+.bride-qr-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
+.bride-qr-actions .bank-copy-button,.bride-qr-actions .bride-qr-download{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:0;padding:11px 16px;font:14px/1.4 Arial,sans-serif}
+.bride-qr-actions [hidden],.bank-account-number[hidden]{display:none}
+.bank-copy-status:empty{display:none}
