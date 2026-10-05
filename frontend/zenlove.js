@@ -291,7 +291,7 @@ document.body.append(photoViewer);
 const photoStage = photoViewer.querySelector('.photo-viewer-stage');
 const fullPhoto = photoViewer.querySelector('img');
 const zoomLabel = photoViewer.querySelector('[data-zoom="reset"]');
-let photoZoom = 1, photoX = 0, photoY = 0, photoOverflow = '', photoTrigger;
+let photoZoom = 1, photoX = 0, photoY = 0, photoOverflow = '', photoTrigger, photoScrollX = 0, photoScrollY = 0;
 const photoPointers = new Map();
 function renderPhoto() {
   const bounds = photoStage.getBoundingClientRect();
@@ -314,14 +314,23 @@ photoViewer.querySelector('.photo-viewer-close').onclick = () => photoViewer.clo
 photoViewer.addEventListener('close', () => {
   document.documentElement.style.overflow = photoOverflow;
   photoPointers.clear();
-  pauseScroll();
   photoTrigger?.focus({preventScroll:true});
+  const savedX = photoScrollX, savedY = photoScrollY;
+  function restorePhotoScroll() {
+    if (photoViewer.open) return;
+    window.scrollTo({left:savedX,top:savedY,behavior:'instant'});
+    pauseScroll();
+  }
+  restorePhotoScroll();
+  requestAnimationFrame(restorePhotoScroll);
 });
 function openPhoto(element) {
   const background = getComputedStyle(element).backgroundImage;
   const match = background.match(/^url\(["']?(.*?)["']?\)$/);
   if (!match || photoViewer.open) return;
   photoTrigger = element;
+  photoScrollX = window.scrollX;
+  photoScrollY = window.scrollY;
   photoOverflow = document.documentElement.style.overflow;
   document.documentElement.style.overflow = 'hidden';
   photoZoom = 1; photoX = 0; photoY = 0;
