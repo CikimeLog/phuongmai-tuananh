@@ -163,7 +163,7 @@ function scrollFrame(now) {
 syncScroll();
 requestAnimationFrame(scrollFrame);
 async function init() {
-  const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config'); if(!response.ok) throw new Error('Không tải được cấu hình.');
+  const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config', {cache:'no-store'}); if(!response.ok) throw new Error('Không tải được cấu hình.');
   const config = await response.json();
   invitationCover.querySelector('.cover-bride').textContent = config.bride?.name || 'Phương Mai';
   invitationCover.querySelector('.cover-groom').textContent = config.groom?.name || 'Tuấn Anh';
@@ -445,7 +445,7 @@ if(form) {
     showFeedback('Đang gửi xác nhận…','pending');
     try {
       const attendance=form.querySelector('input[type=radio]:checked')?.value||'yes';
-      const invitationConfig=await (await fetch(location.hostname.endsWith('github.io')?'config.json':'/api/config')).json();
+      const invitationConfig=await (await fetch(location.hostname.endsWith('github.io')?'config.json':'/api/config',{cache:'no-store'})).json();
       const data={invitationSide:invitationConfig.invitationSide,name:name.value.trim(),attendance,count:attendance==='no'?0:Number(count?.value||1),message:''};
       const onPages=location.hostname.endsWith('github.io');
       let endpoint='/api/rsvp',payload=data;

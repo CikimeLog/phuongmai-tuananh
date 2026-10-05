@@ -72,7 +72,7 @@
     window.scrollTo({top:savedScroll,behavior:'instant'});
     image.hidden = true;link.hidden = true;copyButton.hidden = true;copyStatus.textContent = '';accountInput.hidden = true;message.textContent = 'Đang tải ảnh QR…';
     try {
-      const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config');
+      const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config', {cache:'no-store'});
       if(!response.ok) throw new Error('Không tải được ảnh QR. Vui lòng thử lại.');
       const config = await response.json();
       const recipient = config[config.invitationSide || 'groom'];
