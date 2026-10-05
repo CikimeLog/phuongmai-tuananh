@@ -28,7 +28,7 @@ if (!width || !height) throw new Error('Cannot read thumbnail JPEG dimensions');
 const tags = [
   `<title>${escape(title)}</title>`,
   `<meta name="description" content="${escape(description)}">`,
-  ...Object.entries({'og:type':'website','og:title':title,'og:description':description,'og:url':url,'og:image':image,'og:image:type':'image/jpeg','og:image:width':width,'og:image:height':height,'og:image:alt':title,'og:locale':'vi_VN'}).map(([key, value]) => `<meta property="${key}" content="${escape(value)}">`),
+  ...Object.entries({'og:type':'website','og:site_name':title,'og:title':title,'og:description':description,'og:url':url,'og:image':image,'og:image:secure_url':image,'og:image:type':'image/jpeg','og:image:width':width,'og:image:height':height,'og:image:alt':title,'og:locale':'vi_VN'}).map(([key, value]) => `<meta property="${key}" content="${escape(value)}">`),
   '<meta name="twitter:card" content="summary_large_image">',
   `<meta name="twitter:title" content="${escape(title)}">`,
   `<meta name="twitter:description" content="${escape(description)}">`,
