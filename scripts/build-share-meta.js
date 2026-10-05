@@ -10,10 +10,25 @@ const description = `Trân trọng kính mời bạn chung vui cùng chúng mìn
 const url = 'https://cikimelog.github.io/weding/';
 const image = `${url}assets/thumb.jpg`;
 if (!fs.existsSync(path.join(root, 'frontend/assets/thumb.jpg'))) throw new Error('Missing frontend/assets/thumb.jpg');
+const jpeg = fs.readFileSync(path.join(root, 'frontend/assets/thumb.jpg'));
+let width, height;
+for (let offset = 2; offset + 9 < jpeg.length;) {
+  if (jpeg[offset] !== 0xff) break;
+  const marker = jpeg[offset + 1];
+  const length = jpeg.readUInt16BE(offset + 2);
+  if ([0xc0, 0xc1, 0xc2].includes(marker)) {
+    height = jpeg.readUInt16BE(offset + 5);
+    width = jpeg.readUInt16BE(offset + 7);
+    break;
+  }
+  if (length < 2) break;
+  offset += 2 + length;
+}
+if (!width || !height) throw new Error('Cannot read thumbnail JPEG dimensions');
 const tags = [
   `<title>${escape(title)}</title>`,
   `<meta name="description" content="${escape(description)}">`,
-  ...Object.entries({'og:type':'website','og:title':title,'og:description':description,'og:url':url,'og:image':image,'og:image:alt':title,'og:locale':'vi_VN'}).map(([key, value]) => `<meta property="${key}" content="${escape(value)}">`),
+  ...Object.entries({'og:type':'website','og:title':title,'og:description':description,'og:url':url,'og:image':image,'og:image:type':'image/jpeg','og:image:width':width,'og:image:height':height,'og:image:alt':title,'og:locale':'vi_VN'}).map(([key, value]) => `<meta property="${key}" content="${escape(value)}">`),
   '<meta name="twitter:card" content="summary_large_image">',
   `<meta name="twitter:title" content="${escape(title)}">`,
   `<meta name="twitter:description" content="${escape(description)}">`,
@@ -22,6 +37,6 @@ const tags = [
 const htmlPath = path.join(root, 'frontend/index.html');
 let html = fs.readFileSync(htmlPath, 'utf8');
 html = html.replace(/<!-- share-meta:start -->[\s\S]*?<!-- share-meta:end -->\s*/g, '').replace(/<title>[\s\S]*?<\/title>/, '');
-html = html.replace('</head>', `<!-- share-meta:start -->\n${tags}\n<!-- share-meta:end -->\n</head>`);
+html = html.replace(/<head>/, `<head>\n<!-- share-meta:start -->\n${tags}\n<!-- share-meta:end -->\n`);
 fs.writeFileSync(htmlPath, html);
 console.log('Share preview updated from frontend/config.json');
