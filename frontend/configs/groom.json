@@ -8,5 +8,11 @@
   "bank": {
     "accountNo": "000000002897",
     "qrImage": "assets/QR_CHURE.jpg"
-  }
+  },
+  "lunarDate": {
+    "solarDate": "08.11.2026",
+    "text": "Tức ngày 30 tháng 9 năm Bính Ngọ"
+  },
+  "mapsUrl": "https://www.google.com/maps/dir/?api=1&destination=Kh%C3%A1ch%20s%E1%BA%A1n%20S%C3%B4ng%20Chanh%2C%2072%20Nguy%E1%BB%85n%20B%C3%ACnh%2C%20Qu%E1%BA%A3ng%20Y%C3%AAn%2C%20Qu%E1%BA%A3ng%20Ninh",
+  "venueNameFontSize": 25
 }

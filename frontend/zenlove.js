@@ -54,7 +54,7 @@ invitationCover.className = 'invitation-cover';
 invitationCover.tabIndex = -1;
 invitationCover.setAttribute('autofocus', '');
 invitationCover.setAttribute('aria-label', 'Mở thiệp cưới');
-invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Anh & Mai</strong><small>25 · 10 · 2026</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">A <i>&</i> M</span></div><h1><span class="cover-groom">Tuấn Anh</span><em>&</em><span class="cover-bride">Phương Mai</span></h1><p class="cover-date">25 · 10 · 2026</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg></span></button></div>';
+invitationCover.innerHTML = '<div class="cover-card"><p class="cover-eyebrow">THIỆP MỜI LỄ THÀNH HÔN</p><div class="cover-envelope" aria-hidden="true"><div class="cover-letter"><span>Trân trọng kính mời</span><strong>Anh & Mai</strong><small>Đang tải ngày cưới…</small></div><div class="cover-pocket"></div><div class="cover-flap"></div><span class="cover-seal">A <i>&</i> M</span></div><h1><span class="cover-groom">Tuấn Anh</span><em>&</em><span class="cover-bride">Phương Mai</span></h1><p class="cover-date">Đang tải ngày cưới…</p><p class="cover-message">Một ngày đặc biệt, một lời mời dành cho bạn.</p><button type="button" class="cover-open">Mở thiệp <span aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg></span></button></div>';
 document.body.append(invitationCover);
 const previousOverflow = document.documentElement.style.overflow;
 document.documentElement.style.overflow = 'hidden';
@@ -168,7 +168,8 @@ async function init() {
   invitationCover.querySelector('.cover-bride').textContent = config.bride?.name || 'Phương Mai';
   invitationCover.querySelector('.cover-groom').textContent = config.groom?.name || 'Tuấn Anh';
   const coverDate = parseWeddingDate(config.weddingDateTime);
-  if (Number.isFinite(coverDate)) invitationCover.querySelector('.cover-date').textContent = new Intl.DateTimeFormat('vi-VN',{timeZone:config.timeZone || 'Asia/Ho_Chi_Minh',day:'2-digit',month:'2-digit',year:'numeric'}).format(coverDate).replaceAll('/', ' · ');
+  const coverDateText = Number.isFinite(coverDate) ? new Intl.DateTimeFormat('vi-VN',{timeZone:config.timeZone || 'Asia/Ho_Chi_Minh',day:'2-digit',month:'2-digit',year:'numeric'}).format(coverDate).replaceAll('/', ' · ') : 'Ngày cưới chưa được cập nhật';
+  invitationCover.querySelectorAll('.cover-date,.cover-letter small').forEach(el => el.textContent = coverDateText);
   const imageVersion = Date.now();
   document.querySelectorAll('[data-photo]').forEach(el => {
     const file = config.photos?.[el.dataset.photo];
@@ -195,6 +196,8 @@ async function init() {
   };
   document.querySelectorAll('[data-config]').forEach(el=>{el.textContent=values[el.dataset.config] || '';});
   document.querySelectorAll('[data-config="venueName"]').forEach(el => {
+    if (Number.isFinite(config.venueNameFontSize)) el.style.fontSize = Math.max(18, Math.min(36, config.venueNameFontSize)) + 'px';
+    el.style.whiteSpace = 'nowrap';
     if (!config.venueHall) return;
     const hall = document.createElement('span');
     hall.className = 'venue-hall';

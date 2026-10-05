@@ -15,6 +15,7 @@ function mergeConfig(base, override) {
     result[key] = value && typeof value === 'object' && !Array.isArray(value)
       ? mergeConfig(base[key] || {}, value) : value;
   }
+  if (Object.hasOwn(override, 'venue') && !Object.hasOwn(override, 'mapsUrl')) result.mapsUrl = '';
   return result;
 }
 if (require.main === module) {
