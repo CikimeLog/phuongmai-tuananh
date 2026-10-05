@@ -1,4 +1,12 @@
 {
   "invitationSide": "groom",
-  "siteUrl": "https://cikimelog.github.io/tuananh-phuongmai/"
+  "siteUrl": "https://cikimelog.github.io/tuananh-phuongmai/",
+  "weddingDateTime": "08/11/2026 10:30:00 AM",
+  "venueName": "Khách sạn Sông Chanh",
+  "venueHall": "Tại Tầng 1,",
+  "venue": "Số 72 Nguyễn Bình, Phường Quảng Yên, TP Quảng Ninh",
+  "bank": {
+    "accountNo": "000000002897",
+    "qrImage": "assets/QR_CHURE.jpg"
+  }
 }
