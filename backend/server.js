@@ -44,7 +44,9 @@ const server = http.createServer(async (req, res) => {
    let body = ''; for await (const chunk of req) { body += chunk; if (Buffer.byteLength(body)>8192) return json(res,413,{error:'Lời nhắn quá dài.'}); }
    let data; try {data=JSON.parse(body);} catch {return json(res,400,{error:'Dữ liệu không hợp lệ.'});}
    if (typeof data.name !== 'string' || !data.name.trim() || data.name.length>100 || !['yes','no'].includes(data.attendance) || typeof data.message !== 'string' || data.message.length>2000 || (data.attendance==='yes' && (!Number.isInteger(data.count)||data.count<1||data.count>10))) return json(res,400,{error:'Vui lòng kiểm tra tên, số người và lời chúc.'});
-   const item={id:crypto.randomUUID(),name:data.name.trim(),attendance:data.attendance,count:data.attendance==='no'?0:data.count,message:data.message.trim(),createdAt:new Date().toISOString()};
+   const config=JSON.parse(fs.readFileSync(path.join(__dirname,'config.json'),'utf8').replace(/^\uFEFF/,''));
+   if(data.invitationSide && !['groom','bride'].includes(data.invitationSide)) return json(res,400,{error:'Phía gửi thiệp không hợp lệ.'});
+   const item={invitationSide:data.invitationSide||config.invitationSide||'groom',id:crypto.randomUUID(),name:data.name.trim(),attendance:data.attendance,count:data.attendance==='no'?0:data.count,message:data.message.trim(),createdAt:new Date().toISOString()};
    item.telegramPending=true;
    const items=read(); items.push(item); write(items);
    syncSheets();

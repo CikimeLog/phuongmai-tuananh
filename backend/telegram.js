@@ -5,7 +5,7 @@ function loadTelegram(filename) {
 }
 function messageFor(item) {
   const time=new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',dateStyle:'short',timeStyle:'short'}).format(new Date(item.createdAt));
-  return `XÁC NHẬN THAM DỰ MỚI\nHọ tên: ${item.name}\nTham dự: ${item.attendance==='yes'?'Có':'Không'}\nSố người: ${item.count}\nThời gian: ${time}\nMã: ${item.id}`;
+  return `XÁC NHẬN THAM DỰ MỚI\nPhía: ${item.invitationSide==='bride'?'Cô dâu':'Chú rể'}\nHọ tên: ${item.name}\nTham dự: ${item.attendance==='yes'?'Có':'Không'}\nSố người: ${item.count}\nThời gian: ${time}\nMã: ${item.id}`;
 }
 function createTelegramNotifier({read,write,settings,fetchImpl=fetch,logger=console}) {
   let running=false, retryAt=0;

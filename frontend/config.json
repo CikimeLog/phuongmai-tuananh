@@ -41,5 +41,7 @@
     "photo08": "assets/photo-08.JPG",
     "photo09": "assets/photo-09.JPG"
   },
-  "rsvpEndpoint": "https://script.google.com/macros/s/AKfycbxfFfsDIDLAHqvE5RWvs0GusnPj0DgTSl3tgpr5MAjjN6DHIH5KZgwxt0XFYlNyz2uHRQ/exec"
+  "rsvpEndpoint": "https://script.google.com/macros/s/AKfycbxfFfsDIDLAHqvE5RWvs0GusnPj0DgTSl3tgpr5MAjjN6DHIH5KZgwxt0XFYlNyz2uHRQ/exec",
+  "invitationSide": "groom",
+  "siteUrl": "https://cikimelog.github.io/tuananh-phuongmai/"
 }

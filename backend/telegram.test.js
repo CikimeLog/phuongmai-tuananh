@@ -18,3 +18,8 @@ test('disabled connection does not send',async()=>{
   const worker=createTelegramNotifier({read:()=>[item],write(){},settings:()=>({}),fetchImpl:()=>{throw Error('Must not send');}});await worker.sync();
   assert.match(messageFor({...item,attendance:'no',count:0}),/Tham dự: Không\nSố người: 0/);
 });
+
+test('Telegram labels each invitation side',()=>{
+  assert.match(messageFor({...item,invitationSide:'bride'}),/Phía: Cô dâu/);
+  assert.match(messageFor({...item,invitationSide:'groom'}),/Phía: Chú rể/);
+});

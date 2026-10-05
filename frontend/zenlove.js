@@ -440,11 +440,12 @@ if(form) {
     showFeedback('Đang gửi xác nhận…','pending');
     try {
       const attendance=form.querySelector('input[type=radio]:checked')?.value||'yes';
-      const data={name:name.value.trim(),attendance,count:attendance==='no'?0:Number(count?.value||1),message:''};
+      const invitationConfig=await (await fetch(location.hostname.endsWith('github.io')?'config.json':'/api/config')).json();
+      const data={invitationSide:invitationConfig.invitationSide,name:name.value.trim(),attendance,count:attendance==='no'?0:Number(count?.value||1),message:''};
       const onPages=location.hostname.endsWith('github.io');
       let endpoint='/api/rsvp',payload=data;
       if(onPages){
-        const config=await (await fetch('config.json')).json();endpoint=config.rsvpEndpoint;
+        const config=invitationConfig;endpoint=config.rsvpEndpoint;
         if(!endpoint)throw new Error('Kết nối xác nhận chưa được cập nhật.');
         const fingerprint=JSON.stringify(data);
         if(!pendingRsvp||pendingRsvp.fingerprint!==fingerprint)pendingRsvp={fingerprint,id:crypto.randomUUID()};

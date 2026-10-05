@@ -21,6 +21,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Select invitation configuration
+        env:
+          INVITATION_SIDE: ${{ vars.INVITATION_SIDE }}
+        run: node scripts/select-invitation.js
       - name: Generate link preview from config
         run: node scripts/build-share-meta.js
       - uses: actions/configure-pages@v5

@@ -1,6 +1,12 @@
 {
   "name": "wedding-fullstack",
   "private": true,
-  "scripts": { "start": "node backend/server.js", "check": "node --check backend/server.js", "test": "node --test backend/sheets-sync.test.js integrations/google-sheets.test.js" },
-  "engines": { "node": ">=20" }
+  "scripts": {
+    "start": "node backend/server.js",
+    "check": "node --check backend/server.js",
+    "test": "node --test backend/*.test.js integrations/*.test.js scripts/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
 }

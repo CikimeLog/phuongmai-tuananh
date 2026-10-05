@@ -16,12 +16,20 @@ function doPost(e) {
         typeof r.message !== 'string' || r.message.length > 2000 || !Number.isFinite(Date.parse(r.createdAt))) {
       return reply({ok:false,error:'Invalid RSVP'});
     }
+    if (r.invitationSide === undefined) r.invitationSide = 'groom'; // Legacy submissions.
+    if (!['groom','bride'].includes(r.invitationSide)) return reply({ok:false,error:'Invalid invitation side'});
     if (publicRequest) r.createdAt = new Date().toISOString();
     lock = LockService.getScriptLock();
     lock.waitLock(20000);
-    const book = SpreadsheetApp.openById(props.getProperty('SPREADSHEET_ID'));
-    const sheet = book.getSheetByName('RSVP');
-    if (!sheet) return reply({ok:false,error:'Missing RSVP tab'});
+    const suffix = r.invitationSide.toUpperCase();
+    const spreadsheetId = props.getProperty('SPREADSHEET_ID_' + suffix) || props.getProperty('SPREADSHEET_ID');
+    const tabName = props.getProperty('RSVP_TAB_' + suffix) || (r.invitationSide === 'bride' ? 'RSVP_CoDau' : 'RSVP_ChuRe');
+    const book = SpreadsheetApp.openById(spreadsheetId);
+    let sheet = book.getSheetByName(tabName);
+    if (!sheet) {
+      sheet = book.insertSheet(tabName);
+      sheet.getRange(1,1,1,6).setValues([['Mã xác nhận','Thời gian gửi','Họ và tên','Tham dự','Số người','Lời nhắn']]);
+    }
     const headers = ['Mã xác nhận','Thời gian gửi','Họ và tên','Tham dự','Số người','Lời nhắn'];
     if (JSON.stringify(sheet.getRange(1,1,1,6).getValues()[0]) !== JSON.stringify(headers)) {
       return reply({ok:false,error:'Unexpected headers'});
@@ -52,7 +60,7 @@ function doPost(e) {
 function sendTelegramRsvp(r,props) {
   const token=props.getProperty('TELEGRAM_BOT_TOKEN'),chat=props.getProperty('TELEGRAM_CHAT_ID');
   if(!token||!chat)return;
-  const text='XÁC NHẬN THAM DỰ MỚI\nHọ tên: '+r.name+'\nTham dự: '+(r.attendance==='yes'?'Có':'Không')+'\nSố người: '+r.count+'\nThời gian: '+Utilities.formatDate(new Date(r.createdAt),'Asia/Ho_Chi_Minh','dd/MM/yyyy HH:mm:ss')+'\nMã: '+r.id;
+  const text='XÁC NHẬN THAM DỰ MỚI\nPhía: '+(r.invitationSide==='bride'?'Cô dâu':'Chú rể')+'\nHọ tên: '+r.name+'\nTham dự: '+(r.attendance==='yes'?'Có':'Không')+'\nSố người: '+r.count+'\nThời gian: '+Utilities.formatDate(new Date(r.createdAt),'Asia/Ho_Chi_Minh','dd/MM/yyyy HH:mm:ss')+'\nMã: '+r.id;
   const response=UrlFetchApp.fetch('https://api.telegram.org/bot'+token+'/sendMessage',{method:'post',contentType:'application/json',payload:JSON.stringify({chat_id:chat,text}),muteHttpExceptions:true});
   if(JSON.parse(response.getContentText()).ok)props.deleteProperty('telegram_pending_'+r.id);
 }

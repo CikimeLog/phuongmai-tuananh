@@ -14,7 +14,7 @@ function createSheetsSync({read, write, settings, fetchImpl = fetch, logger = co
         try {
           const response = await fetchImpl(config.webhookUrl, {
             method:'POST', headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({secret:config.secret, rsvp:{id:item.id,name:item.name,attendance:item.attendance,count:item.count,message:item.message,createdAt:item.createdAt}}),
+            body:JSON.stringify({secret:config.secret, rsvp:{invitationSide:item.invitationSide||'groom',id:item.id,name:item.name,attendance:item.attendance,count:item.count,message:item.message,createdAt:item.createdAt}}),
             signal:AbortSignal.timeout(15000)
           });
           const result = await response.json();

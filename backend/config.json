@@ -40,5 +40,7 @@
     "photo07": "assets/photo-07.png",
     "photo08": "assets/photo-08.jpg",
     "photo09": "assets/photo-09.jpg"
-  }
+  },
+  "invitationSide": "groom",
+  "siteUrl": "https://cikimelog.github.io/tuananh-phuongmai/"
 }

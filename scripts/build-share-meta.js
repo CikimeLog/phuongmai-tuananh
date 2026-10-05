@@ -5,9 +5,11 @@ const config = JSON.parse(fs.readFileSync(path.join(root, 'frontend/config.json'
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 const match = config.weddingDateTime?.match(/^(\d{2})\/(\d{2})\/(\d{4})\s/);
 const date = match ? `${match[1]}.${match[2]}.${match[3]}` : '';
-const title = `Thiệp cưới ${config.groom?.name || ''} & ${config.bride?.name || ''}`;
+const names = config.invitationSide === 'bride' ? [config.bride?.name,config.groom?.name] : [config.groom?.name,config.bride?.name];
+const title = `Thiệp cưới ${names.join(' & ')}`;
 const description = `Trân trọng kính mời bạn chung vui cùng chúng mình${date ? ` · ${date}` : ''}`;
-const url = 'https://cikimelog.github.io/weding/';
+const url = config.siteUrl;
+if (!url || !url.endsWith('/')) throw new Error('config.siteUrl must end with /');
 const image = `${url}assets/thumb.jpg`;
 if (!fs.existsSync(path.join(root, 'frontend/assets/thumb.jpg'))) throw new Error('Missing frontend/assets/thumb.jpg');
 const jpeg = fs.readFileSync(path.join(root, 'frontend/assets/thumb.jpg'));

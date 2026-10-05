@@ -75,14 +75,18 @@
       const response = await fetch(location.hostname.endsWith('github.io') ? 'config.json' : '/api/config');
       if(!response.ok) throw new Error('Không tải được ảnh QR. Vui lòng thử lại.');
       const config = await response.json();
-      const accountNo = String(config.bride?.accountNo || config.bank?.accountNo || '').trim();
+      const recipient = config[config.invitationSide || 'groom'];
+      const label = config.invitationSide === 'bride' ? 'cô dâu' : 'chú rể';
+      image.alt = 'Mã QR ' + label;
+      link.download = config.invitationSide === 'bride' ? 'QR-co-dau' : 'QR-chu-re';
+      const accountNo = String(recipient?.accountNo || config.bank?.accountNo || '').trim();
       if (accountNo && accountNo !== 'SO_TAI_KHOAN_MAU') {
         accountInput.value = accountNo;
 
         copyButton.hidden = false;
       }
-      const file = config.bride?.qrImage || config.bank?.qrImage;
-      if(!file) {message.textContent = 'Ảnh QR cô dâu chưa được cập nhật.';return;}
+      const file = recipient?.qrImage || config.bank?.qrImage;
+      if(!file) {message.textContent = 'Ảnh QR ' + label + ' chưa được cập nhật.';return;}
       const url = new URL(file,location.href);
       if(url.origin !== location.origin) throw new Error('Ảnh QR chưa được cấu hình đúng.');
       message.textContent = '';image.src = url.href;image.hidden = false;link.href = url.href;link.hidden = false;
