@@ -12,7 +12,9 @@ const image = `${url}assets/thumb.jpg`;
 if (!fs.existsSync(path.join(root, 'frontend/assets/thumb.jpg'))) throw new Error('Missing frontend/assets/thumb.jpg');
 const jpeg = fs.readFileSync(path.join(root, 'frontend/assets/thumb.jpg'));
 const imageVersion = require('node:crypto').createHash('sha256').update(jpeg).digest('hex').slice(0, 12);
-const versionedImage = `${image}?v=${imageVersion}`;
+const imageFile = `thumb-${imageVersion}.jpg`;
+fs.writeFileSync(path.join(root, 'frontend/assets', imageFile), jpeg);
+const versionedImage = `${url}assets/${imageFile}`;
 let width, height;
 for (let offset = 2; offset + 9 < jpeg.length;) {
   if (jpeg[offset] !== 0xff) break;
@@ -41,4 +43,7 @@ let html = fs.readFileSync(htmlPath, 'utf8');
 html = html.replace(/<!-- share-meta:start -->[\s\S]*?<!-- share-meta:end -->\s*/g, '').replace(/<title>[\s\S]*?<\/title>/, '');
 html = html.replace(/<head>/, `<head>\n<!-- share-meta:start -->\n${tags}\n<!-- share-meta:end -->\n`);
 fs.writeFileSync(htmlPath, html);
+// An independent share URL allows testing a fresh canonical preview.
+const freshShare = html.replace(`<meta property="og:url" content="${url}">`, `<meta property="og:url" content="${url}moi.html">`);
+fs.writeFileSync(path.join(root, 'frontend/moi.html'), freshShare);
 console.log('Share preview updated from frontend/config.json');
