@@ -251,7 +251,9 @@ async function init() {
     document.querySelector('[data-node-id="WasT3iVjkw"]').style.top = '1487.3px';
     el.replaceChildren(weekday, day);
   });
-  document.title = `${values['groom.name']} & ${values['bride.name']} | Thiệp cưới`;
+  document.title = config.invitationSide === 'bride'
+    ? `${values['bride.name']} & ${values['groom.name']} | Thiệp cưới`
+    : `${values['groom.name']} & ${values['bride.name']} | Thiệp cưới`;
   if(config.music && new URL(config.music, location.href).href !== music.src) music.src = config.music;
   startMusic();
   const directions = document.getElementById('directions');
